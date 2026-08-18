@@ -1,0 +1,63 @@
+{
+  "label": "baseline",
+  "base": "http://localhost:3001",
+  "timestamp": "2026-08-17T23:52:38.005Z",
+  "bug1_oversell": {
+    "description": "Fire N concurrent orders (qty 1 each) against a product with fixed initial stock.",
+    "initialStock": 10,
+    "concurrentRequests": 20,
+    "succeededOrders": 20,
+    "rejectedOrders": 0,
+    "finalStock": 9,
+    "stockActuallyConsumed": 1,
+    "phantomSoldUnits": 19,
+    "correct": false
+  },
+  "bug3_circular_json": {
+    "description": "GET /orders/:id/full called 5 times on a normal order.",
+    "orderId": 21,
+    "attempts": 5,
+    "errorCount": 5,
+    "errorRate": 1,
+    "sampleStatus": 500,
+    "sampleBody": {
+      "statusCode": 500,
+      "message": "Internal server error"
+    },
+    "correct": false
+  },
+  "bug4_cache": {
+    "crossQueryContamination": {
+      "description": "Search for \"beta\" right after searching \"alpha\" — do the beta results wrongly contain alpha data?",
+      "betaSearchReturnedAlphaData": true,
+      "betaSearchReturnedOwnData": false,
+      "correct": false
+    },
+    "staleAfterWrite": {
+      "description": "Search the same query before/after creating a new product that matches it — does the second search see the new product?",
+      "resultCountBeforeNewProduct": 1,
+      "resultCountAfterNewProduct": 1,
+      "sawNewProduct": false,
+      "correct": false
+    }
+  },
+  "bug5_category_tree": {
+    "description": "3-level hierarchy (Root -> Mid -> Leaf). Fetch tree from the leaf (parent direction) and from the root (children direction).",
+    "leafTreeStatus": 500,
+    "leafTreeParentChainCorrect": false,
+    "rootTreeStatus": 500,
+    "rootTreeDistinctCategoriesReachable": 0,
+    "expectedDistinctCategories": 3,
+    "correct": false
+  },
+  "bug6_batch_log": {
+    "description": "POST /products/batch with one valid id (7) and one nonexistent id (999999999). Check the server log for a diagnosable line (see *_server.log, grepped separately).",
+    "requestTimestamp": 1787010758160,
+    "responseStatus": 201,
+    "responseBody": {
+      "success": true,
+      "processed": 1
+    },
+    "badProductId": 999999999
+  }
+}

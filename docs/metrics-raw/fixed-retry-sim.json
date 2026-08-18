@@ -1,0 +1,7 @@
+{
+  "maxRetries": 3,
+  "outcome": "exhausted",
+  "attempts": 3,
+  "elapsedMs": 611,
+  "lastError": "Payment service unavailable"
+}

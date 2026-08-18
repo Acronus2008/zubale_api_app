@@ -1,0 +1,99 @@
+{
+  "label": "fixed",
+  "base": "http://localhost:3001",
+  "timestamp": "2026-08-17T23:52:13.727Z",
+  "bug1_oversell": {
+    "description": "Fire N concurrent orders (qty 1 each) against a product with fixed initial stock.",
+    "initialStock": 10,
+    "concurrentRequests": 20,
+    "succeededOrders": 10,
+    "rejectedOrders": 10,
+    "finalStock": 0,
+    "stockActuallyConsumed": 10,
+    "phantomSoldUnits": 0,
+    "correct": true
+  },
+  "bug3_circular_json": {
+    "description": "GET /orders/:id/full called 5 times on a normal order.",
+    "orderId": 21,
+    "attempts": 5,
+    "errorCount": 0,
+    "errorRate": 0,
+    "sampleStatus": 200,
+    "sampleBody": {
+      "id": 21,
+      "status": "pending",
+      "total": "5.00",
+      "user": {
+        "id": 1,
+        "email": "metrics_1787010733728@test.com",
+        "name": "Metrics Tester",
+        "isActive": true,
+        "createdAt": "2026-08-18T03:52:13.758Z",
+        "latestOrder": {
+          "id": 21,
+          "status": "pending",
+          "total": "5.00"
+        }
+      },
+      "userId": 1,
+      "items": [
+        {
+          "id": 11,
+          "orderId": 21,
+          "product": {
+            "id": 2,
+            "name": "FullDetails Test Item",
+            "description": null,
+            "price": "5.00",
+            "stock": 99,
+            "isAvailable": true,
+            "categoryId": null,
+            "category": null,
+            "createdAt": "2026-08-18T03:52:13.843Z",
+            "updatedAt": "2026-08-18T03:52:13.844Z"
+          },
+          "productId": 2,
+          "quantity": 1,
+          "price": "5.00"
+        }
+      ],
+      "createdAt": "2026-08-18T03:52:13.844Z"
+    },
+    "correct": true
+  },
+  "bug4_cache": {
+    "crossQueryContamination": {
+      "description": "Search for \"beta\" right after searching \"alpha\" — do the beta results wrongly contain alpha data?",
+      "betaSearchReturnedAlphaData": false,
+      "betaSearchReturnedOwnData": true,
+      "correct": true
+    },
+    "staleAfterWrite": {
+      "description": "Search the same query before/after creating a new product that matches it — does the second search see the new product?",
+      "resultCountBeforeNewProduct": 1,
+      "resultCountAfterNewProduct": 2,
+      "sawNewProduct": true,
+      "correct": true
+    }
+  },
+  "bug5_category_tree": {
+    "description": "3-level hierarchy (Root -> Mid -> Leaf). Fetch tree from the leaf (parent direction) and from the root (children direction).",
+    "leafTreeStatus": 200,
+    "leafTreeParentChainCorrect": true,
+    "rootTreeStatus": 200,
+    "rootTreeDistinctCategoriesReachable": 3,
+    "expectedDistinctCategories": 3,
+    "correct": true
+  },
+  "bug6_batch_log": {
+    "description": "POST /products/batch with one valid id (7) and one nonexistent id (999999999). Check the server log for a diagnosable line (see *_server.log, grepped separately).",
+    "requestTimestamp": 1787010733880,
+    "responseStatus": 201,
+    "responseBody": {
+      "success": true,
+      "processed": 1
+    },
+    "badProductId": 999999999
+  }
+}
