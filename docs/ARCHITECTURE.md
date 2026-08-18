@@ -234,7 +234,7 @@ greenfield design might choose:
 - **Eager relations** (`Order.user`, `Order.items`, `OrderItem.product`,
   `Product.category`) — a real N+1/payload-size cost, but changing the
   loading strategy would alter response shapes across every consumer of
-  these entities. Flagged in `CLAUDE.md`, not one of the reported symptoms.
+  these entities.
 - **No auth/authorization layer** — all endpoints remain open, as given.
 - **`synchronize: true`, no migrations** — kept as the existing dev-mode
   setup.
