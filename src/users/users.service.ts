@@ -1,6 +1,11 @@
-import { Injectable, NotFoundException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+  Inject,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { User } from './user.entity';
@@ -45,7 +50,16 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.usersRepository.create(createUserDto);
-    const saved = await this.usersRepository.save(user);
+    let saved: User;
+    try {
+      saved = await this.usersRepository.save(user);
+    } catch (error) {
+      //Default error code for postgres when unique constraint is violated (unique email constraint)
+      if (error instanceof QueryFailedError && (error.driverError as { code?: string })?.code === '23505') {
+        throw new ConflictException(`Email ${createUserDto.email} is already in use`);
+      }
+      throw error;
+    }
     await this.cacheManager.del('users:all');
     return saved;
   }
