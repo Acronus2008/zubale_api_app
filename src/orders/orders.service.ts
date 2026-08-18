@@ -177,7 +177,7 @@ export class OrdersService {
 
     try {
       for (const item of order.items) {
-        await this.productsService.adjustStock(
+        await this.productsService.updateStock(
           item.productId,
           item.quantity,
           queryRunner.manager,

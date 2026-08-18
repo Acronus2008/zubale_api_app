@@ -17,7 +17,7 @@ describe('OrdersService', () => {
     save: jest.Mock;
   };
   let usersService: { findOne: jest.Mock };
-  let productsService: { adjustStock: jest.Mock; findOne: jest.Mock };
+  let productsService: { updateStock: jest.Mock; findOne: jest.Mock };
   let queryRunner: {
     connect: jest.Mock;
     startTransaction: jest.Mock;
@@ -49,7 +49,7 @@ describe('OrdersService', () => {
 
     ordersRepository = { find: jest.fn(), findOne: jest.fn(), save: jest.fn() };
     usersService = { findOne: jest.fn().mockResolvedValue({ id: 1 }) };
-    productsService = { adjustStock: jest.fn(), findOne: jest.fn() };
+    productsService = { updateStock: jest.fn(), findOne: jest.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -82,7 +82,7 @@ describe('OrdersService', () => {
         price: 5,
         name: 'Widget',
       });
-      productsService.adjustStock
+      productsService.updateStock
         .mockResolvedValueOnce(undefined) // item 1 succeeds
         .mockRejectedValueOnce(
           new BadRequestException('Not enough stock for Widget'),
@@ -109,7 +109,7 @@ describe('OrdersService', () => {
         price: 5,
         name: 'Widget',
       });
-      productsService.adjustStock.mockResolvedValue(undefined);
+      productsService.updateStock.mockResolvedValue(undefined);
       ordersRepository.findOne.mockResolvedValue({
         id: 1,
         status: OrderStatus.PENDING,
@@ -124,7 +124,7 @@ describe('OrdersService', () => {
 
       expect(queryRunner.commitTransaction).toHaveBeenCalledTimes(1);
       expect(queryRunner.rollbackTransaction).not.toHaveBeenCalled();
-      expect(productsService.adjustStock).toHaveBeenCalledWith(
+      expect(productsService.updateStock).toHaveBeenCalledWith(
         10,
         -2,
         queryRunner.manager,

@@ -110,11 +110,11 @@ describe('ProductsService', () => {
     });
   });
 
-  describe('adjustStock — atomic stock updates', () => {
+  describe('updateStock — atomic stock updates', () => {
     it('decrements stock with a single conditional UPDATE and succeeds when stock is sufficient', async () => {
       queryBuilderExecute.mockResolvedValue({ affected: 1 });
 
-      await expect(service.adjustStock(1, -3)).resolves.toBeUndefined();
+      await expect(service.updateStock(1, -3)).resolves.toBeUndefined();
       expect(productsRepository.createQueryBuilder).toHaveBeenCalled();
     });
 
@@ -126,13 +126,13 @@ describe('ProductsService', () => {
         stock: 2,
       } as Product);
 
-      await expect(service.adjustStock(1, -5)).rejects.toThrow(
+      await expect(service.updateStock(1, -5)).rejects.toThrow(
         BadRequestException,
       );
     });
 
     it('restores stock via increment for positive deltas (e.g. order cancellation)', async () => {
-      await service.adjustStock(1, 4);
+      await service.updateStock(1, 4);
       expect(productsRepository.increment).toHaveBeenCalledWith(
         { id: 1 },
         'stock',
