@@ -22,7 +22,7 @@ explicit scope boundaries) in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
 
 | Symptom | Root cause | Fix |
 |---|---|---|
-| Data inconsistent/missing; intermittent errors | Stock update not awaited, written as a stale absolute value, no transaction around order creation | Atomic conditional `UPDATE` for stock (`ProductsService.adjustStock`) + `QueryRunner` transaction in `create()`/`cancel()` |
+| Data inconsistent/missing; intermittent errors | Stock update not awaited, written as a stale absolute value, no transaction around order creation | Atomic conditional `UPDATE` for stock (`ProductsService.updateStock`) + `QueryRunner` transaction in `create()`/`cancel()` |
 | Requests extremely slow / never complete | Payment retry loop: `maxRetries = 1000` | Bounded to `3` |
 | Vague/misleading errors | `getOrderWithFullDetails` built a real circular reference before `JSON.stringify` | Non-circular `latestOrder` summary |
 | Cache doesn't match expectations | Product search cache used one hardcoded key for every query, never invalidated | Query-scoped cache key + invalidation on product writes |

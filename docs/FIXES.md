@@ -38,7 +38,7 @@ failed its stock check, item #1's `OrderItem` row and its stock decrement
 were already committed, leaving a half-created order behind.
 
 **Fix:**
-- `ProductsService.adjustStock(id, delta, manager?)` replaces `updateStock`.
+- `ProductsService.updateStock(id, delta, manager?)` replaces `updateStock`.
   For a decrement it issues one conditional SQL statement —
   `UPDATE products SET stock = stock - :n WHERE id = :id AND stock >= :n`
   — via TypeORM's query builder. This is atomic at the database level: the
@@ -47,7 +47,7 @@ were already committed, leaving a half-created order behind.
   stock" a zero-affected-rows result instead of a race window. An optional
   `manager` parameter lets the caller run it inside an existing transaction.
 - `OrdersService.create()` now opens a `QueryRunner` transaction: order
-  creation, each `adjustStock` call, and each `OrderItem` save all go
+  creation, each `updateStock` call, and each `OrderItem` save all go
   through `queryRunner.manager`. Any failure triggers
   `rollbackTransaction()`, so a bad item can no longer leave a partial
   order or an already-applied stock decrement behind.

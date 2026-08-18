@@ -147,7 +147,7 @@ sequenceDiagram
     OS->>QR: manager.save(Order, {status: PENDING})
     loop each item
         OS->>QR: manager.findOne(Product, id)
-        OS->>PS: adjustStock(productId, -qty, manager)
+        OS->>PS: updateStock(productId, -qty, manager)
         PS->>DB: UPDATE products SET stock = stock - qty<br/>WHERE id = :id AND stock >= :qty
         alt affected = 0 (insufficient stock)
             PS-->>OS: throw BadRequestException
@@ -204,7 +204,7 @@ worst-case latency to a handful of round trips.
 |---|---|---|---|
 | `UsersService` | `user:{id}` | 60s | `remove(id)` |
 | `UsersService` | `users:all` | 60s | `create()`, `remove(id)` |
-| `ProductsService` | `product-search:{normalized query}` | 60s | `create()`, `remove()`, `adjustStock()` |
+| `ProductsService` | `product-search:{normalized query}` | 60s | `create()`, `remove()`, `updateStock()` |
 
 Each service owns and invalidates its own keys manually (no interceptor,
 no centralized cache layer) — this is the existing pattern from
