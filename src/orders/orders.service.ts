@@ -32,7 +32,7 @@ const paymentService = {
 
 @Injectable()
 export class OrdersService {
-  //decrease maxRetries to 3
+  //decrease maxRetries, limit the number of times a payment can be retried in case of failure
   private maxRetries = 3;
 
   constructor(
