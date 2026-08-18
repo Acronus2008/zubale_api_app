@@ -54,7 +54,7 @@ export class ProductsService {
    * clobber each other or oversell. `manager` allows callers (e.g. an order
    * creation) to run this inside their own DB transaction.
    */
-  async adjustStock(
+  async updateStock(
     id: number,
     delta: number,
     manager?: EntityManager,

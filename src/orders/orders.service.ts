@@ -101,7 +101,7 @@ export class OrdersService {
         // Atomic conditional decrement: throws if stock is insufficient,
         // and can't race with a concurrent order for the same product
         // because the UPDATE takes a row lock for the transaction's duration.
-        await this.productsService.adjustStock(
+        await this.productsService.updateStock(
           product.id,
           -itemDto.quantity,
           queryRunner.manager,
